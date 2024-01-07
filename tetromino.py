@@ -46,5 +46,11 @@ class Tetromino:
                 break
         return result
     
-    def next_move_rotation_collision(self): #to write
-        pass
+    def next_move_rotation_collision(self): 
+        next_positions = [block.will_rotate_collide() for block in self.blocks]
+        result = False
+        for pos in next_positions:
+            if(pos):
+                result = True
+                break
+        return result
