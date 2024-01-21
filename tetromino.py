@@ -22,11 +22,18 @@ class Tetromino:
         elif (direction == 'RIGHT' and not self.next_move_horizontal_collision(1) and not self.next_move_vertical_collision(1)):
             for block in self.blocks:
                 block.x += 1  
-        elif (direction == 'ROT' and not self.next_move_rotation_collision):
-            self.rotate() #to write
+        elif (direction == 'ROT' and not self.next_move_rotation_collision()):
+            if(self.shape != 'O'):
+                self.rotate() #to write
     
     def rotate(self): #to write
-        pass
+        pivot_x = self.blocks[2].x
+        pivot_y = self.blocks[2].y
+
+        for block in self.blocks:
+            curr_x = block.x
+            block.x = block.y-pivot_y + pivot_x
+            block.y = pivot_x + pivot_y - curr_x
     
     def next_move_horizontal_collision(self,amount): #amount can be 1 or -1
         next_positions = [block.will_horizontal_collide(block.x+amount) for block in self.blocks]
@@ -47,10 +54,17 @@ class Tetromino:
         return result
     
     def next_move_rotation_collision(self): 
-        next_positions = [block.will_rotate_collide() for block in self.blocks]
+        #rotate about 3rd block of tetromino
+        pivot_x = self.blocks[2].x
+        pivot_y = self.blocks[2].y
+
+        rot_positions = [(block.y-pivot_y + pivot_x, pivot_x + pivot_y - block.x) for block in self.blocks]
+        next_positions = [OCCUPIED[rot_position[1]][rot_position[0]] for rot_position in rot_positions]
+
         result = False
         for pos in next_positions:
             if(pos):
                 result = True
                 break
+        print(result)
         return result

@@ -26,7 +26,3 @@ class Block(pygame.sprite.Sprite):
             return False
         else:
             return True
-    
-    def will_rotate_collide(self):
-        #to write
-        pass

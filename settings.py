@@ -36,7 +36,7 @@ TETROMINO = {'T':[(-1,0),(0,-1),(0,0),(1,0)],
              'S':[(0,-1),(1,-1),(0,0),(-1,0)]}
 
 FALL_TIME = 500
-MOVE_DETECT_TIME = 180
+MOVE_DETECT_TIME = 230
 
 #Global variables
 

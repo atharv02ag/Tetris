@@ -35,6 +35,7 @@ class Game:
         if(keys[pygame.K_LEFT]):
             self.movement = 'LEFT'
         elif(keys[pygame.K_RIGHT]):
+            print("i go a right")
             self.movement = 'RIGHT'
         elif(keys[pygame.K_DOWN]):
             self.movement = 'DOWN'
