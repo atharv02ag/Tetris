@@ -11,6 +11,7 @@ class Block(pygame.sprite.Sprite):
         self.y = pos[1] #row number
         self.rect = self.image.get_rect(topleft = (self.x*CELL_SIZE, self.y*CELL_SIZE))
         self.falling = True
+        self.gravity = False
 
     def update(self):
         self.rect.topleft = (self.x*CELL_SIZE, self.y*CELL_SIZE)

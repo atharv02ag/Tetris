@@ -22,6 +22,9 @@ class Tetromino:
         elif (direction == 'RIGHT' and not self.next_move_horizontal_collision(1) and not self.next_move_vertical_collision(1)):
             for block in self.blocks:
                 block.x += 1  
+        elif (direction == 'DOWN' and not self.next_move_vertical_collision(1)):
+            for block in self.blocks:
+                block.y += 1
         elif (direction == 'ROT' and not self.next_move_rotation_collision()):
             if(self.shape != 'O'):
                 self.rotate() #to write
@@ -59,12 +62,11 @@ class Tetromino:
         pivot_y = self.blocks[2].y
 
         rot_positions = [(block.y-pivot_y + pivot_x, pivot_x + pivot_y - block.x) for block in self.blocks]
-        next_positions = [OCCUPIED[rot_position[1]][rot_position[0]] for rot_position in rot_positions]
+        next_positions = [rot_position[1] < 0 or rot_position[1] >= ROWS or rot_position[0] < 0 or rot_position[0] >= COLUMNS or OCCUPIED[rot_position[1]][rot_position[0]] for rot_position in rot_positions]
 
         result = False
         for pos in next_positions:
             if(pos):
                 result = True
                 break
-        print(result)
         return result

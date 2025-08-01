@@ -26,7 +26,7 @@ BACKGROUND_COLOR = (80,80,80) #gray
 PANEL_COLOR = (0,0,0) #black
 
 #tetromino shape
-SPAWN_LOCATION = (4,0) #of top-left block
+SPAWN_LOCATION = (4,1) #of top-left block
 TETROMINO = {'T':[(-1,0),(0,-1),(0,0),(1,0)],
              'O':[(0,-1),(0,0),(1,-1),(1,0)],
              'J':[(0,-1),(1,-1),(1,0),(1,1)],
@@ -35,8 +35,9 @@ TETROMINO = {'T':[(-1,0),(0,-1),(0,0),(1,0)],
              'L':[(0,-1),(0,0),(0,1),(1,1)],
              'S':[(0,-1),(1,-1),(0,0),(-1,0)]}
 
-FALL_TIME = 500
-MOVE_DETECT_TIME = 230
+SHAPES = ['T','O','J','Z','I','L','S']
+FALL_TIME = 800
+MOVE_DETECT_TIME = 200
 
 #Global variables
 
