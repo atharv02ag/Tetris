@@ -1,4 +1,5 @@
 from settings import *
+import globals
 
 class Block(pygame.sprite.Sprite):
 
@@ -17,13 +18,13 @@ class Block(pygame.sprite.Sprite):
         self.rect.topleft = (self.x*CELL_SIZE, self.y*CELL_SIZE)
 
     def will_horizontal_collide(self,x_pos):
-        if(x_pos>=0 and x_pos<COLUMNS and not OCCUPIED[self.y][x_pos]):
+        if(x_pos>=0 and x_pos<COLUMNS and not globals.OCCUPIED[self.y][x_pos]):
             return False
         else:
             return True
         
     def will_vertical_collide(self,y_pos):
-        if(y_pos<ROWS and not OCCUPIED[y_pos][self.x]):
+        if(y_pos<ROWS and not globals.OCCUPIED[y_pos][self.x]):
             return False
         else:
             return True

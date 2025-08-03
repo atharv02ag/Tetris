@@ -37,9 +37,4 @@ TETROMINO = {'T':[(-1,0),(0,-1),(0,0),(1,0)],
 
 SHAPES = ['T','O','J','Z','I','L','S']
 FALL_TIME = 800
-MOVE_DETECT_TIME = 200
-
-#Global variables
-
-#OCCUPIED[y(row number)][x(column number)]
-OCCUPIED = [[False for i in range(COLUMNS)] for j in range(ROWS)]
+GRAVITY_ADJUST_TIME = 200

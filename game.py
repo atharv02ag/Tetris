@@ -1,8 +1,9 @@
 from settings import *
 from random import randint
-from block import Block
 from tetromino import Tetromino
 from timer import Timer
+import globals
+from collections import deque
 
 class Game:
     def __init__(self):
@@ -11,7 +12,7 @@ class Game:
         self.game_rect = self.game_surface.get_rect(topleft = (PADDING,PADDING))
         self.movement = ''
         self.movement_intensity = 0
-        self.row_adjusted = -1
+        self.rows_to_be_adjusted = deque()
         
         #testing
         rand_shape = randint(0,6)
@@ -24,7 +25,7 @@ class Game:
 
         self.tetromino = Tetromino(self.sprites,SHAPES[rand_shape],rand_type)
         self.timers = {'FALL' : Timer(FALL_TIME,self.fall),
-                       'GRAVITY' : Timer(MOVE_DETECT_TIME, self.gravity_adjust_row)}
+                       'GRAVITY' : Timer(GRAVITY_ADJUST_TIME, self.gravity_adjust_row)}
 
     def new_tetromino(self):
         rand_shape = randint(0,6)
@@ -35,14 +36,15 @@ class Game:
         self.tetromino.fall()
     
     def gravity_adjust_row(self):
-        if(self.row_adjusted == -1):
+        if(len(self.rows_to_be_adjusted) == 0):
             return
-        for row in range(self.row_adjusted-1,0,-1):
-            for block in self.blocks_per_row[row]:
-                block.y += 1
-            self.blocks_per_row[row+1] = self.blocks_per_row[row].copy()
-            OCCUPIED[row+1] = OCCUPIED[row]
-        self.row_adjusted = -1
+        while(len(self.rows_to_be_adjusted) > 0):
+            row_adjusted = self.rows_to_be_adjusted.pop()
+            for row in range(row_adjusted-1,0,-1):
+                for block in self.blocks_per_row[row]:
+                    block.y += 1
+                self.blocks_per_row[row+1] = self.blocks_per_row[row].copy()
+                globals.OCCUPIED[row+1] = globals.OCCUPIED[row]
         
     def input(self):
         keys = pygame.key.get_pressed()
@@ -76,18 +78,16 @@ class Game:
             self.tetromino.shift(self.movement)
     
     def occupy(self):
-        global OCCUPIED
         for block in self.tetromino.blocks:
-            OCCUPIED[block.y][block.x] = True
+            globals.OCCUPIED[block.y][block.x] = True
             block.add(self.blocks_per_row[block.y])
 
     def clear_line(self):
-        global OCCUPIED
         row = -1
         for i in range(ROWS):
             curr = i
             for j in range(COLUMNS):
-                if(not OCCUPIED[i][j]):
+                if(not globals.OCCUPIED[i][j]):
                     curr = -1
                     break
             if(curr != -1):
@@ -101,13 +101,13 @@ class Game:
                 to_kill.append(block)
                 
         for col in range(COLUMNS):
-            OCCUPIED[row][col] = False
+            globals.OCCUPIED[row][col] = False
 
         for block in to_kill:
             pygame.sprite.Sprite.kill(block)
 
-        self.row_adjusted = row
-
+        self.rows_to_be_adjusted.append(row)
+        globals.SCORE += 1
 
     def run(self):    
         self.screen.blit(self.game_surface,self.game_rect)

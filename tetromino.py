@@ -1,5 +1,6 @@
 from settings import *
 from block import Block
+import globals
                
 class Tetromino:
     #shape - L,J,O etc. while type = 0,1,2 indicating colour
@@ -62,7 +63,7 @@ class Tetromino:
         pivot_y = self.blocks[2].y
 
         rot_positions = [(block.y-pivot_y + pivot_x, pivot_x + pivot_y - block.x) for block in self.blocks]
-        next_positions = [rot_position[1] < 0 or rot_position[1] >= ROWS or rot_position[0] < 0 or rot_position[0] >= COLUMNS or OCCUPIED[rot_position[1]][rot_position[0]] for rot_position in rot_positions]
+        next_positions = [rot_position[1] < 0 or rot_position[1] >= ROWS or rot_position[0] < 0 or rot_position[0] >= COLUMNS or globals.OCCUPIED[rot_position[1]][rot_position[0]] for rot_position in rot_positions]
 
         result = False
         for pos in next_positions:
