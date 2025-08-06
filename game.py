@@ -25,7 +25,8 @@ class Game:
 
         self.tetromino = Tetromino(self.sprites,SHAPES[rand_shape],rand_type)
         self.timers = {'FALL' : Timer(FALL_TIME,self.fall),
-                       'GRAVITY' : Timer(GRAVITY_ADJUST_TIME, self.gravity_adjust_row)}
+                       'GRAVITY' : Timer(GRAVITY_ADJUST_TIME, self.gravity_adjust_row),
+                       'LAND_DELAY' : Timer(LAND_DELAY_TIME,self.land_tetromino)}
 
     def new_tetromino(self):
         rand_shape = randint(0,6)
@@ -39,6 +40,8 @@ class Game:
         if(len(self.rows_to_be_adjusted) == 0):
             return
         while(len(self.rows_to_be_adjusted) > 0):
+            globals.SCORE += COLUMNS
+            globals.LINES += 1
             row_adjusted = self.rows_to_be_adjusted.pop()
             for row in range(row_adjusted-1,0,-1):
                 for block in self.blocks_per_row[row]:
@@ -49,26 +52,30 @@ class Game:
     def input(self):
         keys = pygame.key.get_pressed()
         if(keys[pygame.K_LEFT]):
-            #print("left")
             self.movement = 'LEFT'
             self.movement_intensity += 1
         elif(keys[pygame.K_RIGHT]):
-            #print("right")
             self.movement = 'RIGHT'
             self.movement_intensity += 1
         elif(keys[pygame.K_DOWN]):
-            #print("down")
             self.movement = 'DOWN'
             self.movement_intensity += 1
-        elif(keys[pygame.K_SPACE]):
-            #print("rotate")
+        elif(keys[pygame.K_UP]):
             self.movement = 'ROT'
+            self.movement_intensity += 1
+        elif(keys[pygame.K_SPACE]):
+            self.movement = 'DROP'
             self.movement_intensity += 1
         else :
             self.movement = ''
             self.movement_intensity = 0
 
     def move(self):
+        if(self.movement == 'DROP'):
+            self.tetromino.shift(self.movement)
+            self.movement = ''
+            self.movement_intensity = 0
+            return
         if(self.movement_intensity > 7):
             self.tetromino.shift(self.movement)
         elif(self.movement_intensity > 5):
@@ -107,7 +114,16 @@ class Game:
             pygame.sprite.Sprite.kill(block)
 
         self.rows_to_be_adjusted.append(row)
-        globals.SCORE += 1
+    
+    def land_tetromino(self):
+        self.occupy()
+        self.new_tetromino()
+
+    def check_game_end(self):
+        for col in range(COLUMNS):
+            if globals.OCCUPIED[0][col]:
+                return True
+        return False
 
     def run(self):    
         self.screen.blit(self.game_surface,self.game_rect)
@@ -117,13 +133,18 @@ class Game:
         self.clear_line()
         self.move()
 
+        if(len(self.rows_to_be_adjusted) > 0):
+            self.timers['GRAVITY'].startTimer()
+
+        self.timers['FALL'].startTimer()
+
         #if not falling, spawn new tetromino
         if(self.tetromino.next_move_vertical_collision(1)): 
-            self.occupy()
-            self.new_tetromino()
-    
-        self.timers['GRAVITY'].startTimer()
-        self.timers['FALL'].startTimer()
+            self.timers['LAND_DELAY'].startTimer()
+        
+        if self.check_game_end():
+            globals.GAME_OVER = True
+            print("game over!")
 
         self.sprites.update()
         self.sprites.draw(self.game_surface)

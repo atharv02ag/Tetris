@@ -8,13 +8,15 @@ class Score:
         self.score_surface = pygame.Surface((SCORE_WIDTH,SCORE_HEIGHT))
         self.score_rect = self.score_surface.get_rect(topleft=(2*PADDING + GAME_WIDTH, PADDING))
         pygame.font.init()
-        self.score_font = pygame.font.SysFont('Serif',30)
+        self.font = pygame.font.SysFont('Serif',30)
 
     def run(self):
 
         self.screen.blit(self.score_surface,self.score_rect)
         self.score_surface.fill(PANEL_COLOR)
-        self.score_text = self.score_font.render(f"Score : {globals.SCORE}", False, (255,255,255))
+        self.score_text = self.font.render(f"Score : {globals.SCORE}", False, SCORE_FONT_COLOR)
         self.score_text_rect = self.score_text.get_rect(topleft = (PADDING/2 ,PADDING/2))
+        self.line_text = self.font.render(f"Lines : {globals.LINES}", False, SCORE_FONT_COLOR)
+        self.line_text_rect = self.line_text.get_rect(topleft = (PADDING/2, 2*PADDING))
         self.score_surface.blit(self.score_text, self.score_text_rect)
-        print("score run ", globals.SCORE)
+        self.score_surface.blit(self.line_text, self.line_text_rect)

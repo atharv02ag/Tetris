@@ -9,7 +9,8 @@ class Tetromino:
         self.block_positions = TETROMINO[self.shape]
 
         #blocks making up the tetromino
-        self.blocks = [Block((SPAWN_LOCATION[0]+position[0],SPAWN_LOCATION[1]+position[1]),group,type) for position in self.block_positions]
+        self.blocks = [Block((SPAWN_LOCATION[0]+position[0],SPAWN_LOCATION[1]+position[1]),group,type) 
+                       for position in self.block_positions]
 
     def fall(self):
         if(not self.next_move_vertical_collision(1)):
@@ -17,10 +18,10 @@ class Tetromino:
                 block.y += 1
 
     def shift(self,direction:str):
-        if(direction == 'LEFT' and not self.next_move_horizontal_collision(-1) and not self.next_move_vertical_collision(1)):
+        if(direction == 'LEFT' and not self.next_move_horizontal_collision(-1)):
             for block in self.blocks:
                 block.x += -1
-        elif (direction == 'RIGHT' and not self.next_move_horizontal_collision(1) and not self.next_move_vertical_collision(1)):
+        elif (direction == 'RIGHT' and not self.next_move_horizontal_collision(1)):
             for block in self.blocks:
                 block.x += 1  
         elif (direction == 'DOWN' and not self.next_move_vertical_collision(1)):
@@ -28,9 +29,13 @@ class Tetromino:
                 block.y += 1
         elif (direction == 'ROT' and not self.next_move_rotation_collision()):
             if(self.shape != 'O'):
-                self.rotate() #to write
+                self.rotate()
+        elif (direction == 'DROP'):
+            while(not self.next_move_vertical_collision(1)):
+                for block in self.blocks:
+                    block.y += 1
     
-    def rotate(self): #to write
+    def rotate(self):
         pivot_x = self.blocks[2].x
         pivot_y = self.blocks[2].y
 
@@ -57,13 +62,15 @@ class Tetromino:
                 break
         return result
     
-    def next_move_rotation_collision(self): 
-        #rotate about 3rd block of tetromino
+    def next_move_rotation_collision(self): #rotate about 3rd block of tetromino
         pivot_x = self.blocks[2].x
         pivot_y = self.blocks[2].y
 
         rot_positions = [(block.y-pivot_y + pivot_x, pivot_x + pivot_y - block.x) for block in self.blocks]
-        next_positions = [rot_position[1] < 0 or rot_position[1] >= ROWS or rot_position[0] < 0 or rot_position[0] >= COLUMNS or globals.OCCUPIED[rot_position[1]][rot_position[0]] for rot_position in rot_positions]
+        next_positions = [rot_position[1] < 0 or rot_position[1] >= ROWS or 
+                          rot_position[0] < 0 or rot_position[0] >= COLUMNS or 
+                          globals.OCCUPIED[rot_position[1]][rot_position[0]] 
+                          for rot_position in rot_positions]
 
         result = False
         for pos in next_positions:

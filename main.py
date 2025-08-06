@@ -2,6 +2,8 @@ from sys import exit
 from settings import *
 from game import Game
 from score import Score
+from game_over import Game_Over
+import globals
 
 class Main() :
     def __init__(self):
@@ -15,6 +17,7 @@ class Main() :
         #components
         self.game = Game()
         self.score = Score()
+        self.game_over = Game_Over()
 
     def run(self):
         running = True
@@ -32,14 +35,16 @@ class Main() :
             self.screen.fill(BACKGROUND_COLOR)
 
             #running components
-            self.score.run()       
-            self.game.run()
+            self.score.run()    
+            if not globals.GAME_OVER:   
+                self.game.run()
+            else:
+                self.game_over.run()
 
             #screen update
             pygame.display.update()
             self.clock.tick(FPS)
 
-#https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 if(__name__ == '__main__'):
     main = Main()
     main.run()

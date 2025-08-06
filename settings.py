@@ -5,7 +5,7 @@ FPS = 60
 
 #Block
 CELL_SIZE = 40
-COLUMNS = 10
+COLUMNS = 8
 ROWS = 20
 TYPES = ['assets/Blue.png','assets/Red.png','assets/Yellow.png']
 
@@ -17,6 +17,7 @@ GAME_HEIGHT = ROWS*CELL_SIZE
 #score window
 SCORE_WIDTH = 4*CELL_SIZE
 SCORE_HEIGHT = 4*CELL_SIZE
+SCORE_FONT_COLOR = (255,255,255)
 
 #screen window
 SCREEN_HEIGHT = GAME_HEIGHT + 2*PADDING
@@ -36,5 +37,6 @@ TETROMINO = {'T':[(-1,0),(0,-1),(0,0),(1,0)],
              'S':[(0,-1),(1,-1),(0,0),(-1,0)]}
 
 SHAPES = ['T','O','J','Z','I','L','S']
-FALL_TIME = 800
-GRAVITY_ADJUST_TIME = 200
+FALL_TIME = 800 
+GRAVITY_ADJUST_TIME = 400 
+LAND_DELAY_TIME = 500
